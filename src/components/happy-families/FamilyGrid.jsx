@@ -1,5 +1,4 @@
 import React from 'react'
-import { Heart, Maximize2 } from 'lucide-react'
 
 export default function FamilyGrid({ moments, onSelectMoment }) {
   if (!moments || moments.length === 0) {
@@ -10,53 +9,52 @@ export default function FamilyGrid({ moments, onSelectMoment }) {
     )
   }
 
+  // Pre-calculated organic tilts for whimsical polaroid layout
+  const tilts = [-2.2, 1.8, -1.4, 2.3, -2.5, 1.2, -1.8, 2.1, -1.9, 1.5, -2.4, 2.0]
+  const tapeColors = ['#f6d79a', '#ffd280', '#cfe5f6', '#f9cdbf', '#d8ecd5', '#fce5bb']
+
   return (
-    <div className="family-masonry columns-1 sm:columns-2 md:columns-3 lg:columns-4 gap-4 sm:gap-6 space-y-4 sm:space-y-6">
+    <div className="tp-wall">
       {moments.map((moment, index) => {
+        const tilt = tilts[index % tilts.length]
+        const tape = tapeColors[index % tapeColors.length]
+
         return (
-          <div
-            key={moment.id || index}
-            onClick={() => onSelectMoment(index)}
-            className="break-inside-avoid group relative bg-cream rounded-3xl overflow-hidden border border-cocoa/10 shadow-soft hover:shadow-card hover:-translate-y-1 transition-all duration-300 cursor-pointer"
-            role="button"
-            tabIndex={0}
-            onKeyDown={(e) => {
-              if (e.key === 'Enter' || e.key === ' ') {
-                e.preventDefault()
-                onSelectMoment(index)
-              }
-            }}
-            aria-label={`View moment: ${moment.caption || 'Happy family'}`}
-          >
-            {/* Image Container */}
-            <div className="relative overflow-hidden bg-sand/30 aspect-auto">
-              <img
-                src={moment.image}
-                alt={moment.alt || moment.caption || 'Happy TeddyPups family'}
-                loading="lazy"
-                className="w-full h-auto object-cover transform group-hover:scale-105 transition-transform duration-500"
-              />
+          <div key={moment.id || index} className="tp-wall__item">
+            <button
+              type="button"
+              className="tp-wall__print"
+              onClick={() => onSelectMoment(index)}
+              aria-label={`View moment: ${moment.caption || 'Happy family'}`}
+            >
+              <figure
+                className="tp-polaroid cursor-pointer"
+                style={{ '--tilt': `${tilt}deg` }}
+              >
+                {/* Washi tape on top center of polaroid */}
+                <span
+                  className="tp-tape tp-tape--center"
+                  style={{ '--tape': tape }}
+                ></span>
 
-              {/* Hover overlay hint */}
-              <div className="absolute inset-0 bg-gradient-to-t from-cocoa/80 via-transparent to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-300 flex items-end justify-between p-4">
-                <span className="inline-flex items-center gap-1.5 text-xs text-milk font-semibold bg-white/20 backdrop-blur-sm px-2.5 py-1 rounded-full">
-                  <Maximize2 size={12} />
-                  <span>Enlarge</span>
+                {/* Photo frame */}
+                <span className="tp-polaroid__photo">
+                  <img
+                    src={moment.image}
+                    alt={moment.alt || moment.caption || 'Happy TeddyPups family'}
+                    loading="lazy"
+                    className="w-full h-auto object-cover"
+                  />
                 </span>
-                <span className="p-1.5 rounded-full bg-honey/80 text-cocoa">
-                  <Heart size={14} className="fill-cocoa" />
-                </span>
-              </div>
-            </div>
 
-            {/* Caption */}
-            {moment.caption && (
-              <div className="p-3.5 bg-milk/95 border-t border-cocoa/5">
-                <p className="font-scrawl text-sm text-cocoa font-medium leading-snug">
-                  {moment.caption}
-                </p>
-              </div>
-            )}
+                {/* Handwritten Caption */}
+                {moment.caption && (
+                  <figcaption className="tp-polaroid__caption font-scrawl">
+                    {moment.caption}
+                  </figcaption>
+                )}
+              </figure>
+            </button>
           </div>
         )
       })}

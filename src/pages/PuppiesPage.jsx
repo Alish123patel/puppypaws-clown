@@ -1,6 +1,5 @@
 import React, { useState, useMemo } from 'react'
-import { Sparkles, MessageCircle, Heart } from 'lucide-react'
-import { availablePuppies, siteConfig } from '../data/index.js'
+import { availablePuppies } from '../data/index.js'
 import PuppyCard from '../components/common/PuppyCard.jsx'
 import FilterBar from '../components/puppies/FilterBar.jsx'
 import GoneHomePreview from '../components/puppies/GoneHomePreview.jsx'
@@ -15,7 +14,6 @@ export default function PuppiesPage() {
     const rawBreeds = new Set()
     availablePuppies.forEach((p) => {
       if (!p.breed) return
-      // Normalize common breed groups for clean filter pills
       if (p.breed.includes('Maltipoo')) rawBreeds.add('Maltipoo')
       else if (p.breed.includes('Pomeranian')) rawBreeds.add('Pomeranian')
       else if (p.breed.includes('Poodle')) rawBreeds.add('Poodle')
@@ -64,77 +62,81 @@ export default function PuppiesPage() {
   }
 
   return (
-    <div className="puppies-page py-12 sm:py-16 bg-milk min-h-screen">
-      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-        {/* Page Header Banner */}
-        <div className="text-center max-w-3xl mx-auto mb-12">
-          <div className="inline-flex items-center gap-1.5 px-3.5 py-1.5 rounded-full bg-honey/30 text-toffee text-xs sm:text-sm font-semibold mb-4">
-            <Sparkles size={14} className="fill-toffee" />
-            <span>Looking for their loving homes</span>
+    <div data-page="pups" className="tp-page">
+      <section aria-labelledby="pups-title" className="tp-sketchbook">
+        <div className="gutter mx-auto max-w-[110rem] pb-24 pt-10 md:pt-16">
+          {/* Sketchbook Header */}
+          <div className="tp-sketchbook__head">
+            <div className="tp-sketchbook__words">
+              <p className="font-scrawl text-lg text-toffee-ink" data-reveal="true">
+                from Teddy's sketchbook
+              </p>
+              <h1 id="pups-title" className="font-plush text-giant tp-sketchbook__title" data-reveal="true">
+                Available puppies
+                <svg
+                  aria-hidden="true"
+                  viewBox="0 0 400 24"
+                  preserveAspectRatio="none"
+                  className="tp-sketchbook__underline"
+                >
+                  <path d="M4 15c40-9 70 5 112-2s70-9 112 0 74 8 116-1 38-4 52 1" pathLength="1" />
+                </svg>
+              </h1>
+              <p className="tp-sketchbook__lede text-lede mt-6 max-w-[46ch] text-cocoa-soft" data-reveal="true">
+                Every listing shows real photos of the actual puppy. Open a profile to see them all, then ask us about them on WhatsApp.
+              </p>
+            </div>
           </div>
-          <h1 className="font-plush font-bold text-4xl sm:text-5xl lg:text-6xl text-cocoa tracking-tight mb-4">
-            Available puppies
-          </h1>
-          <p className="font-sans text-cocoa-soft text-base sm:text-lg leading-relaxed">
-            Real puppies, real photos, looking for their families right now. Meet them face-to-face in our Downtown Dubai showroom or enquire for same-day delivery.
-          </p>
-        </div>
 
-        {/* Filter Bar */}
-        <FilterBar
-          breeds={breedOptions}
-          selectedBreed={selectedBreed}
-          onSelectBreed={setSelectedBreed}
-          selectedGender={selectedGender}
-          onSelectGender={setSelectedGender}
-          searchQuery={searchQuery}
-          onSearchChange={setSearchQuery}
-          onResetFilters={handleResetFilters}
-          hasActiveFilters={hasActiveFilters}
-          totalCount={availablePuppies.length}
-          filteredCount={filteredPuppies.length}
-        />
-
-        {/* Puppies Grid or Empty State */}
-        {filteredPuppies.length > 0 ? (
-          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6 sm:gap-8">
-            {filteredPuppies.map((puppy) => (
-              <PuppyCard key={puppy.slug} puppy={puppy} />
-            ))}
+          {/* Interactive Filter Bar */}
+          <div className="mt-10">
+            <FilterBar
+              breeds={breedOptions}
+              selectedBreed={selectedBreed}
+              onSelectBreed={setSelectedBreed}
+              selectedGender={selectedGender}
+              onSelectGender={setSelectedGender}
+              searchQuery={searchQuery}
+              onSearchChange={setSearchQuery}
+              onResetFilters={handleResetFilters}
+              hasActiveFilters={hasActiveFilters}
+              totalCount={availablePuppies.length}
+              filteredCount={filteredPuppies.length}
+            />
           </div>
-        ) : (
-          <div className="text-center py-16 px-4 bg-cream/60 rounded-3xl border border-cocoa/10 my-8">
-            <Heart size={40} className="mx-auto text-toffee/40 mb-3" />
-            <h3 className="font-plush font-bold text-2xl text-cocoa mb-2">
-              No puppies match your filter
-            </h3>
-            <p className="font-sans text-cocoa-soft text-sm sm:text-base max-w-md mx-auto mb-6">
-              We update our listings regularly! Try clearing your filters or contact our concierge on WhatsApp to check upcoming litters.
-            </p>
-            <div className="flex flex-col sm:flex-row items-center justify-center gap-3">
+
+          {/* Empty State */}
+          {filteredPuppies.length === 0 ? (
+            <div className="mt-16 text-center py-16 px-6 bg-cream/50 rounded-4xl border border-cocoa/10 max-w-xl mx-auto">
+              <p className="font-plush font-bold text-2xl text-cocoa mb-3">
+                No puppies match your filter
+              </p>
+              <p className="font-sans text-cocoa-soft text-base mb-6">
+                Try selecting a different breed or clearing your search filters to view all available puppies.
+              </p>
               <button
                 type="button"
                 onClick={handleResetFilters}
-                className="btn btn-outline text-xs sm:text-sm py-2.5 px-5"
+                className="btn btn-primary"
               >
-                Reset filters
+                Clear all filters
               </button>
-              <a
-                href={siteConfig.contact.whatsappUrl}
-                target="_blank"
-                rel="noopener noreferrer"
-                className="btn btn-whatsapp text-xs sm:text-sm py-2.5 px-5 flex items-center gap-2"
-              >
-                <MessageCircle size={16} />
-                <span>Ask on WhatsApp</span>
-              </a>
             </div>
-          </div>
-        )}
+          ) : (
+            /* Responsive Inked Polaroids Grid (.tp-sketches) */
+            <ul className="tp-sketches mt-16" aria-label="Available puppies">
+              {filteredPuppies.map((puppy, i) => (
+                <PuppyCard key={puppy.slug} puppy={puppy} index={i} />
+              ))}
+            </ul>
+          )}
 
-        {/* Already Gone Home Preview Section */}
-        <GoneHomePreview />
-      </div>
+          {/* Gone Home Archive Preview Banner */}
+          <div className="mt-24 pt-16 border-t border-cocoa/10">
+            <GoneHomePreview />
+          </div>
+        </div>
+      </section>
     </div>
   )
 }

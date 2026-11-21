@@ -1,5 +1,5 @@
 import React from 'react'
-import { Plane, MapPin, CheckCircle2 } from 'lucide-react'
+import { Plane, MapPin } from 'lucide-react'
 
 export default function WayHomeTimeline({ location, puppyName }) {
   const isImported = location && location.toLowerCase().includes('import')
@@ -54,21 +54,30 @@ export default function WayHomeTimeline({ location, puppyName }) {
   const title = isImported ? 'Coming home from abroad' : 'Meeting in Dubai'
 
   return (
-    <div className="bg-cream/70 rounded-3xl p-6 sm:p-8 border border-cocoa/10 shadow-soft">
-      <div className="flex items-center gap-2 mb-2">
-        <span className="font-scrawl text-sm text-toffee font-bold">3 the way home</span>
+    <div className="border-2 border-cocoa bg-milk rounded-3xl p-6 sm:p-8 shadow-[6px_8px_0_0_#2a170e1a]">
+      <div className="tp-chapter mb-2">
+        <span className="tp-chapter__n">3</span>
+        <span className="font-scrawl font-bold">the way home</span>
       </div>
-      <h3 className="font-plush font-bold text-2xl text-cocoa mb-6 flex items-center gap-2.5">
-        {isImported ? <Plane size={22} className="text-toffee" /> : <MapPin size={22} className="text-toffee" />}
+
+      <h3 className="font-plush font-bold text-2xl sm:text-3xl text-cocoa mb-6 flex items-center gap-2.5">
+        {isImported ? (
+          <Plane size={24} className="text-toffee-deep" />
+        ) : (
+          <MapPin size={24} className="text-toffee-deep" />
+        )}
         <span>{title}</span>
       </h3>
 
       <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6">
-        {activeSteps.map((s) => (
-          <div key={s.step} className="bg-white p-5 rounded-2xl border border-cocoa/5 shadow-xs flex flex-col justify-between">
+        {activeSteps.map((s, idx) => (
+          <div
+            key={s.step}
+            className="border-2 border-cocoa/20 bg-cream/70 p-5 rounded-2xl flex flex-col justify-between hover:border-cocoa transition-colors"
+          >
             <div>
-              <div className="w-8 h-8 rounded-full bg-honey/30 text-toffee-ink font-scrawl font-bold flex items-center justify-center text-sm mb-3">
-                {s.step}
+              <div className="w-8 h-8 rounded-full bg-honey-soft text-toffee-ink font-scrawl font-bold flex items-center justify-center text-sm mb-3 border border-cocoa/30">
+                0{s.step}
               </div>
               <h4 className="font-plush font-bold text-base text-cocoa mb-1.5">
                 {s.title}

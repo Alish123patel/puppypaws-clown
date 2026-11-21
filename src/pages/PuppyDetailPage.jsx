@@ -5,17 +5,14 @@ import {
   Mail,
   CheckCircle2,
   ChevronRight,
-  ShieldCheck,
   Heart,
-  HelpCircle,
   ArrowRight
 } from 'lucide-react'
 import {
   getPuppyBySlug,
   getPreviousPuppy,
   getNextPuppy,
-  availablePuppies,
-  siteConfig
+  availablePuppies
 } from '../data/index.js'
 import PhotoGallery from '../components/puppy-detail/PhotoGallery.jsx'
 import WayHomeTimeline from '../components/puppy-detail/WayHomeTimeline.jsx'
@@ -27,20 +24,20 @@ export default function PuppyDetailPage() {
   const { slug } = useParams()
   const puppy = getPuppyBySlug(slug)
 
-  // Previous & Next navigation
+  // Circular Previous & Next navigation
   const prevPup = useMemo(() => getPreviousPuppy(slug), [slug])
   const nextPup = useMemo(() => getNextPuppy(slug), [slug])
 
-  // Related puppies (select up to 3 available pups excluding current)
+  // Related puppies (up to 3 available pups excluding current)
   const relatedPuppies = useMemo(() => {
     return availablePuppies.filter((p) => p.slug !== slug).slice(0, 3)
   }, [slug])
 
-  // Proper 404 / Not Found state if slug doesn't match any of the 42 puppies
+  // Proper 404 state if slug doesn't match
   if (!puppy) {
     return (
       <div className="min-h-[70vh] flex items-center justify-center py-20 px-4 bg-milk">
-        <div className="max-w-md w-full bg-cream rounded-4xl p-8 sm:p-10 border border-cocoa/10 shadow-elevated text-center">
+        <div className="max-w-md w-full border-3 border-cocoa bg-milk rounded-4xl p-8 sm:p-10 shadow-[8px_10px_0_0_#2a170e24] text-center">
           <Heart size={48} className="text-toffee/40 mx-auto mb-4" />
           <h1 className="font-plush font-bold text-3xl text-cocoa mb-3">
             Puppy Not Found
@@ -49,10 +46,10 @@ export default function PuppyDetailPage() {
             The puppy you're looking for might have wandered off or the address is incorrect. Explore our other adorable teacup puppies!
           </p>
           <div className="flex flex-col gap-3">
-            <Link to="/puppies" className="btn btn-primary py-3.5 text-sm">
+            <Link to="/puppies" className="btn btn-primary py-3.5 text-sm font-bold shadow-soft">
               Browse available puppies
             </Link>
-            <Link to="/" className="btn btn-outline py-3 text-sm">
+            <Link to="/" className="btn btn-outline py-3 text-sm font-bold">
               Return to Homepage
             </Link>
           </div>
@@ -71,7 +68,7 @@ export default function PuppyDetailPage() {
   )}`
 
   return (
-    <div className="puppy-detail-page py-8 sm:py-12 bg-milk min-h-screen">
+    <div data-page="pup-detail" className="tp-page min-h-screen py-8 sm:py-12">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         {/* Breadcrumb Navigation */}
         <nav
@@ -82,7 +79,10 @@ export default function PuppyDetailPage() {
             Home
           </Link>
           <ChevronRight size={14} className="text-cocoa/40 flex-shrink-0" />
-          <Link to={parentCategoryPath} className="hover:text-toffee transition-colors whitespace-nowrap">
+          <Link
+            to={parentCategoryPath}
+            className="hover:text-toffee transition-colors whitespace-nowrap"
+          >
             {parentCategoryLabel}
           </Link>
           <ChevronRight size={14} className="text-cocoa/40 flex-shrink-0" />
@@ -93,8 +93,8 @@ export default function PuppyDetailPage() {
 
         {/* SECTION 1: "1 hello, it's me" (Hero Profile Grid) */}
         <section className="mb-16">
-          <div className="grid grid-cols-1 lg:grid-cols-12 gap-8 lg:gap-12 items-start">
-            {/* Left Column: Image Gallery */}
+          <div className="grid grid-cols-1 lg:grid-cols-12 gap-8 lg:gap-14 items-start">
+            {/* Left Column: Image Gallery Viewport */}
             <div className="lg:col-span-6">
               <PhotoGallery
                 images={puppy.images}
@@ -104,38 +104,37 @@ export default function PuppyDetailPage() {
               />
             </div>
 
-            {/* Right Column: Puppy Profile & Quick Inquiries */}
+            {/* Right Column: Puppy Profile & Specs Board */}
             <div className="lg:col-span-6 flex flex-col justify-between">
               <div>
-                <span className="font-scrawl text-sm text-toffee font-bold block mb-2">
-                  1 hello, it's me
-                </span>
-
-                <div className="flex flex-wrap items-center gap-3 mb-3">
-                  <h1 className="font-plush font-bold text-3xl sm:text-4xl lg:text-5xl text-cocoa tracking-tight">
-                    {puppy.name}
-                  </h1>
+                <div className="tp-chapter mb-2">
+                  <span className="tp-chapter__n">1</span>
+                  <span className="font-scrawl font-bold">hello, it's me</span>
                 </div>
 
-                <p className="font-sans text-lg sm:text-xl text-cocoa-soft font-medium mb-6">
+                <h1 className="font-plush font-bold text-4xl sm:text-5xl lg:text-6xl text-cocoa tracking-tight mb-2">
+                  {puppy.name}
+                </h1>
+
+                <p className="font-sans text-xl sm:text-2xl text-cocoa-soft font-medium mb-6">
                   {puppy.breed}
                 </p>
 
                 {/* Status Notice for Gone Home Puppies */}
                 {!isAvailable && (
-                  <div className="mb-6 p-4 rounded-2xl bg-blush/60 border border-toffee/20 flex items-center gap-3">
-                    <Heart size={20} className="text-toffee fill-toffee flex-shrink-0" />
-                    <p className="text-xs sm:text-sm text-toffee-ink font-semibold">
+                  <div className="mb-6 p-4 rounded-2xl bg-blush border-2 border-toffee-deep flex items-center gap-3">
+                    <Heart size={20} className="text-toffee-deep fill-toffee-deep flex-shrink-0" />
+                    <p className="text-xs sm:text-sm text-toffee-ink font-bold">
                       {puppy.name} has already found their forever family! You can request a similar puppy through our concierge.
                     </p>
                   </div>
                 )}
 
-                {/* Specifications Grid */}
-                <div className="bg-cream/80 rounded-3xl p-6 border border-cocoa/10 shadow-soft mb-8">
+                {/* Specifications Grid Board */}
+                <div className="border-2 border-cocoa bg-milk rounded-3xl p-6 shadow-[5px_6px_0_0_#2a170e1a] mb-8">
                   <div className="grid grid-cols-2 gap-y-4 gap-x-6 text-sm">
                     <div>
-                      <span className="text-xs font-bold text-cocoa-soft uppercase tracking-wider block mb-0.5">
+                      <span className="text-xs font-bold text-cocoa-soft uppercase tracking-wider block mb-0.5 font-sans">
                         Breed
                       </span>
                       <span className="font-bold text-cocoa text-base">
@@ -144,7 +143,7 @@ export default function PuppyDetailPage() {
                     </div>
 
                     <div>
-                      <span className="text-xs font-bold text-cocoa-soft uppercase tracking-wider block mb-0.5">
+                      <span className="text-xs font-bold text-cocoa-soft uppercase tracking-wider block mb-0.5 font-sans">
                         Boy or girl
                       </span>
                       <span className="font-bold text-cocoa text-base capitalize">
@@ -153,7 +152,7 @@ export default function PuppyDetailPage() {
                     </div>
 
                     <div>
-                      <span className="text-xs font-bold text-cocoa-soft uppercase tracking-wider block mb-0.5">
+                      <span className="text-xs font-bold text-cocoa-soft uppercase tracking-wider block mb-0.5 font-sans">
                         Age
                       </span>
                       <span className="font-bold text-cocoa text-base">
@@ -162,7 +161,7 @@ export default function PuppyDetailPage() {
                     </div>
 
                     <div>
-                      <span className="text-xs font-bold text-cocoa-soft uppercase tracking-wider block mb-0.5">
+                      <span className="text-xs font-bold text-cocoa-soft uppercase tracking-wider block mb-0.5 font-sans">
                         Where
                       </span>
                       <span className="font-bold text-cocoa text-base">
@@ -222,10 +221,14 @@ export default function PuppyDetailPage() {
 
         {/* SECTION 2: "2 what comes with [puppy.name]" (Health Guarantees) */}
         <section className="mb-16">
-          <div className="bg-white rounded-3xl p-6 sm:p-10 border border-cocoa/10 shadow-soft">
-            <span className="font-scrawl text-sm text-toffee font-bold block mb-1">
-              2 what comes with {puppy.name}
-            </span>
+          <div className="border-2 border-cocoa bg-milk rounded-3xl p-6 sm:p-10 shadow-[6px_8px_0_0_#2a170e1a]">
+            <div className="tp-chapter mb-2">
+              <span className="tp-chapter__n">2</span>
+              <span className="font-scrawl font-bold">
+                what comes with {puppy.name}
+              </span>
+            </div>
+
             <h2 className="font-plush font-bold text-2xl sm:text-3xl text-cocoa mb-6">
               Every Teddy Pup comes
             </h2>
@@ -234,10 +237,13 @@ export default function PuppyDetailPage() {
               {puppy.inclusions.map((inc) => (
                 <div
                   key={inc}
-                  className="p-4 rounded-2xl bg-cream/70 border border-cocoa/5 flex items-start gap-3"
+                  className="p-4 rounded-2xl bg-cream/70 border-2 border-cocoa/15 flex items-start gap-3 hover:border-cocoa transition-colors"
                 >
-                  <CheckCircle2 size={18} className="text-toffee flex-shrink-0 mt-0.5" />
-                  <span className="font-sans text-sm font-semibold text-cocoa leading-snug">
+                  <CheckCircle2
+                    size={20}
+                    className="text-toffee-deep flex-shrink-0 mt-0.5"
+                  />
+                  <span className="font-sans text-sm font-bold text-cocoa leading-snug">
                     {inc}
                   </span>
                 </div>
@@ -261,16 +267,16 @@ export default function PuppyDetailPage() {
           <section className="mb-14">
             <div className="flex items-end justify-between mb-8">
               <div>
-                <span className="font-scrawl text-sm text-toffee font-bold block mb-1">
+                <span className="font-scrawl text-base text-toffee font-bold block mb-1">
                   more loving companions
                 </span>
-                <h3 className="font-plush font-bold text-2xl sm:text-3xl text-cocoa">
+                <h3 className="font-plush font-bold text-2xl sm:text-4xl text-cocoa">
                   Other available puppies
                 </h3>
               </div>
               <Link
                 to="/puppies"
-                className="text-xs sm:text-sm font-bold text-toffee hover:underline flex items-center gap-1"
+                className="text-sm font-bold text-toffee-deep hover:underline flex items-center gap-1"
               >
                 <span>View all</span>
                 <ArrowRight size={14} />
@@ -285,7 +291,7 @@ export default function PuppyDetailPage() {
           </section>
         )}
 
-        {/* Previous and Next Puppy Pagination */}
+        {/* Previous and Next Puppy Circular Pagination */}
         <PuppyPagination prevPup={prevPup} nextPup={nextPup} />
       </div>
     </div>

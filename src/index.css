@@ -1,8 +1,16 @@
+@import './styles/reference.css';
+
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
 
 :root {
+  --font-figtree: 'Figtree', -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+  --font-fraunces: 'Fraunces', ui-serif, Georgia, serif;
+  --font-shantell: 'Shantell Sans', ui-rounded, "Comic Sans MS", cursive;
+  --font-sans: var(--font-figtree);
+  --font-display: var(--font-fraunces);
+  --font-hand: var(--font-shantell);
   --color-cocoa: #2a170e;
   --color-cocoa-soft: #5a3a28;
   --color-milk: #fffdf8;
@@ -15,7 +23,8 @@
   --color-sky: #bfddf5;
   --color-sky-deep: #2f6e9e;
   --color-blush: #f9cdbf;
-  --header-h: 72px;
+  --gutter: clamp(1rem, 4vw, 3.5rem);
+  --header-h: 4.75rem;
 }
 
 body {

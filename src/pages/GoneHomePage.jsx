@@ -1,7 +1,6 @@
 import React, { useState, useMemo } from 'react'
 import { Link } from 'react-router-dom'
-import { Heart, MessageCircle, ArrowRight } from 'lucide-react'
-import { goneHomePuppies, siteConfig } from '../data/index.js'
+import { goneHomePuppies } from '../data/index.js'
 import PuppyCard from '../components/common/PuppyCard.jsx'
 import FilterBar from '../components/puppies/FilterBar.jsx'
 
@@ -29,19 +28,16 @@ export default function GoneHomePage() {
   // Filtered gone-home puppies
   const filteredPuppies = useMemo(() => {
     return goneHomePuppies.filter((puppy) => {
-      // Breed filter
       if (selectedBreed !== 'All') {
         const matchesBreed = puppy.breed && puppy.breed.toLowerCase().includes(selectedBreed.toLowerCase())
         if (!matchesBreed) return false
       }
 
-      // Gender filter
       if (selectedGender !== 'All') {
         const matchesGender = puppy.gender && puppy.gender.toLowerCase().includes(selectedGender.toLowerCase())
         if (!matchesGender) return false
       }
 
-      // Search query
       if (searchQuery.trim()) {
         const q = searchQuery.toLowerCase().trim()
         const matchesSearch =
@@ -64,93 +60,86 @@ export default function GoneHomePage() {
   }
 
   return (
-    <div className="gone-home-page py-12 sm:py-16 bg-milk min-h-screen">
-      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-        {/* Page Header Banner */}
-        <div className="text-center max-w-3xl mx-auto mb-12">
-          <div className="inline-flex items-center gap-1.5 px-3.5 py-1.5 rounded-full bg-blush text-toffee-deep text-xs sm:text-sm font-semibold mb-4">
-            <Heart size={14} className="fill-current" />
-            <span>Forever Families Archive</span>
+    <div data-page="gone" className="tp-page">
+      <div className="gutter mx-auto max-w-[110rem] pb-24 pt-10 md:pt-16">
+        {/* Booth Header */}
+        <header className="tp-boothhead">
+          <div className="max-w-3xl">
+            <h1 className="font-plush text-giant">
+              Gone home
+              <svg
+                viewBox="0 0 48 44"
+                className="ml-3 inline-block w-[0.45em] -translate-y-[0.15em] text-toffee"
+                aria-hidden="true"
+              >
+                <path
+                  d="M24 40C10 30 4 22 4 14.5 4 8.7 8.6 4 14.3 4c4.1 0 7.6 2.4 9.7 6 2.1-3.6 5.6-6 9.7-6C39.4 4 44 8.7 44 14.5 44 22 38 30 24 40z"
+                  fill="none"
+                  stroke="currentColor"
+                  strokeWidth="3"
+                  strokeLinecap="round"
+                  strokeLinejoin="round"
+                />
+              </svg>
+            </h1>
+            <p className="text-lede mt-6 text-cocoa-soft">
+              Every puppy here has already joined a loving family. Looking for one just like them? Tell us — we'll help you find your match.
+            </p>
+            <Link className="btn btn-primary mt-8 inline-block" to="/puppies">
+              See available puppies
+            </Link>
           </div>
-          <h1 className="font-plush font-bold text-4xl sm:text-5xl lg:text-6xl text-cocoa tracking-tight mb-4">
-            Gone home
-          </h1>
-          <p className="font-sans text-cocoa-soft text-base sm:text-lg leading-relaxed">
-            These precious puppies have already found their loving families across the UAE and worldwide. Take a look back at our cherished alumni who found their forever homes.
-          </p>
-        </div>
+        </header>
 
         {/* Filter Bar */}
-        <FilterBar
-          breeds={breedOptions}
-          selectedBreed={selectedBreed}
-          onSelectBreed={setSelectedBreed}
-          selectedGender={selectedGender}
-          onSelectGender={setSelectedGender}
-          searchQuery={searchQuery}
-          onSearchChange={setSearchQuery}
-          onResetFilters={handleResetFilters}
-          hasActiveFilters={hasActiveFilters}
-          totalCount={goneHomePuppies.length}
-          filteredCount={filteredPuppies.length}
-        />
+        <div className="mt-12 mb-10">
+          <FilterBar
+            breeds={breedOptions}
+            selectedBreed={selectedBreed}
+            onSelectBreed={setSelectedBreed}
+            selectedGender={selectedGender}
+            onSelectGender={setSelectedGender}
+            searchQuery={searchQuery}
+            onSearchChange={setSearchQuery}
+            onResetFilters={handleResetFilters}
+            hasActiveFilters={hasActiveFilters}
+            totalCount={goneHomePuppies.length}
+            filteredCount={filteredPuppies.length}
+          />
+        </div>
 
-        {/* Puppies Grid or Empty State */}
-        {filteredPuppies.length > 0 ? (
-          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6 sm:gap-8">
-            {filteredPuppies.map((puppy) => (
-              <PuppyCard key={puppy.slug} puppy={puppy} />
-            ))}
-          </div>
-        ) : (
-          <div className="text-center py-16 px-4 bg-cream/60 rounded-3xl border border-cocoa/10 my-8">
-            <Heart size={40} className="mx-auto text-toffee/40 mb-3" />
-            <h3 className="font-plush font-bold text-2xl text-cocoa mb-2">
-              No alumni found matching your filter
-            </h3>
-            <p className="font-sans text-cocoa-soft text-sm sm:text-base max-w-md mx-auto mb-6">
-              Try adjusting your filter selections or check out our currently available puppies.
+        {/* Empty State */}
+        {filteredPuppies.length === 0 ? (
+          <div className="text-center py-16 px-6 bg-cream/50 rounded-4xl border border-cocoa/10 max-w-xl mx-auto">
+            <p className="font-plush font-bold text-2xl text-cocoa mb-3">
+              No puppies match your filter
+            </p>
+            <p className="font-sans text-cocoa-soft text-base mb-6">
+              Try adjusting your filters or resetting them to browse all 27 adopted puppies.
             </p>
             <button
               type="button"
               onClick={handleResetFilters}
-              className="btn btn-outline text-xs sm:text-sm py-2.5 px-5"
+              className="btn btn-primary"
             >
-              Reset filters
+              Clear filters
             </button>
           </div>
-        )}
-
-        {/* Order Upon Request Bottom Banner */}
-        <div className="mt-20 bg-cream rounded-4xl p-8 sm:p-12 border border-cocoa/10 shadow-soft text-center max-w-4xl mx-auto">
-          <span className="font-scrawl text-sm text-toffee block mb-2">
-            order upon request
-          </span>
-          <h2 className="font-plush font-bold text-2xl sm:text-3xl text-cocoa mb-4">
-            Fell in love with an adopted puppy?
-          </h2>
-          <p className="font-sans text-cocoa-soft text-sm sm:text-base max-w-xl mx-auto mb-8 leading-relaxed">
-            Our concierge specializes in sourcing rare Korean teacup and European champion lines. We can source a similar puppy specifically tailored to your family's preferences.
-          </p>
-          <div className="flex flex-col sm:flex-row items-center justify-center gap-4">
-            <Link
-              to="/puppies"
-              className="btn btn-primary text-sm py-3 px-6 w-full sm:w-auto flex items-center justify-center gap-2"
-            >
-              <span>View available puppies</span>
-              <ArrowRight size={16} />
-            </Link>
-            <a
-              href={siteConfig.contact.whatsappUrl}
-              target="_blank"
-              rel="noopener noreferrer"
-              className="btn btn-whatsapp text-sm py-3 px-6 w-full sm:w-auto flex items-center justify-center gap-2"
-            >
-              <MessageCircle size={17} />
-              <span>Request custom puppy</span>
-            </a>
+        ) : (
+          /* Train Tickets Grid (.tp-tickets) */
+          <div>
+            <ul className="tp-tickets mt-8" aria-label="Puppies who have gone home">
+              {filteredPuppies.map((puppy, i) => (
+                <PuppyCard
+                  key={puppy.slug}
+                  puppy={puppy}
+                  index={i}
+                  variant="ticket"
+                />
+              ))}
+            </ul>
           </div>
-        </div>
+        )}
       </div>
     </div>
   )

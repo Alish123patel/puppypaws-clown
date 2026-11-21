@@ -4,11 +4,9 @@ import {
   MessageCircle,
   RotateCcw,
   CheckCircle2,
-  AlertCircle,
-  Sparkles,
-  Heart
+  AlertCircle
 } from 'lucide-react'
-import { availablePuppies, siteConfig } from '../../data/index.js'
+import { availablePuppies } from '../../data/index.js'
 
 export default function MadLibsForm() {
   const [formData, setFormData] = useState({
@@ -39,7 +37,6 @@ export default function MadLibsForm() {
     const { name, value } = e.target
     setFormData((prev) => ({ ...prev, [name]: value }))
 
-    // Clear error as user types
     if (errors[name]) {
       setErrors((prev) => ({ ...prev, [name]: '' }))
     }
@@ -73,16 +70,13 @@ export default function MadLibsForm() {
 
   const handleSubmit = (e) => {
     e.preventDefault()
-
     if (!validate()) return
 
     setIsSubmitting(true)
-
-    // Simulate realistic frontend submission
     setTimeout(() => {
       setIsSubmitting(false)
       setSubmitted(true)
-    }, 600)
+    }, 450)
   }
 
   const handleReset = () => {
@@ -98,7 +92,7 @@ export default function MadLibsForm() {
     setSubmitted(false)
   }
 
-  // Construct formatted WhatsApp text
+  // Generate WhatsApp message URL
   const generateWhatsAppUrl = () => {
     const text = `Hi TeddyPups Concierge! 🐾\n\nDear TeddyPups,\nMy name is ${formData.name.trim()}.\nYou can reach me on ${formData.phone.trim()}${
       formData.email.trim() ? ` or email ${formData.email.trim()}` : ''
@@ -110,20 +104,11 @@ export default function MadLibsForm() {
   }
 
   return (
-    <div className="mad-libs-letter relative bg-[#fffcf5] border-2 border-honey/50 rounded-3xl p-6 sm:p-10 shadow-card max-w-2xl mx-auto overflow-hidden">
-      {/* Postage Stamp Accent in Top Right Corner */}
-      <div className="absolute top-5 right-5 hidden sm:flex flex-col items-center justify-center w-16 h-20 border-2 border-dashed border-toffee/40 bg-cream/90 rounded-lg p-1 select-none pointer-events-none rotate-2">
-        <Heart size={20} className="text-toffee fill-toffee mb-1" />
-        <span className="font-scrawl text-[9px] text-toffee-ink font-bold uppercase tracking-wider text-center leading-tight">
-          TeddyPups Air Mail
-        </span>
-      </div>
-
-      {/* Submitted Success Confirmation Card */}
+    <div className="tp-post" data-phase={submitted ? 'sent' : 'writing'}>
       {submitted ? (
-        <div className="py-6 text-center animate-fade-in">
-          <div className="w-16 h-16 rounded-full bg-honey/20 text-toffee flex items-center justify-center mx-auto mb-5">
-            <CheckCircle2 size={36} className="text-toffee" />
+        <div className="tp-letterform text-center py-8">
+          <div className="w-16 h-16 rounded-full bg-honey-soft text-toffee-deep flex items-center justify-center mx-auto mb-4 border-2 border-cocoa">
+            <CheckCircle2 size={36} />
           </div>
 
           <h3 className="font-plush font-bold text-3xl text-cocoa mb-3">
@@ -131,25 +116,26 @@ export default function MadLibsForm() {
           </h3>
 
           <p className="font-sans text-cocoa-soft text-sm sm:text-base max-w-lg mx-auto mb-6 leading-relaxed">
-            <span className="font-semibold text-cocoa">Demo Notice:</span> As this is a live frontend application without an active email server, your inquiry is prepared and ready. You can forward it directly to our live concierge on WhatsApp with a single click!
+            <span className="font-semibold text-cocoa">Notice:</span> Your inquiry has been prepared. Forward it directly to our live concierge on WhatsApp with one click!
           </p>
 
-          {/* Letter Preview Box */}
-          <div className="bg-cream p-5 rounded-2xl border border-cocoa/10 text-left mb-6 font-scrawl text-sm text-cocoa-soft leading-relaxed shadow-sm">
-            <p className="font-bold text-cocoa mb-1">Dear TeddyPups,</p>
+          <div className="bg-[#fff8ea] p-5 rounded-2xl border-2 border-cocoa text-left mb-6 font-scrawl text-sm text-cocoa leading-relaxed shadow-sm">
+            <p className="font-bold text-toffee-ink mb-1">Dear TeddyPups,</p>
             <p>
-              My name is <span className="text-toffee font-semibold">{formData.name}</span>, and you can reach me on{' '}
-              <span className="text-toffee font-semibold">{formData.phone}</span>
-              {formData.email && <> (or by email at <span className="text-toffee font-semibold">{formData.email}</span>)</>}.
+              My name is <strong className="text-toffee-deep">{formData.name}</strong>, and you can reach me on{' '}
+              <strong className="text-toffee-deep">{formData.phone}</strong>
+              {formData.email && <> (or email <strong className="text-toffee-deep">{formData.email}</strong>)</>}.
             </p>
             <p className="mt-1">
-              I live in <span className="text-toffee font-semibold">{formData.city || 'Dubai'}</span>, and I'm curious about{' '}
-              <span className="text-toffee font-semibold">{formData.puppyInterest}</span>.
+              I live in <strong className="text-toffee-deep">{formData.city || 'Dubai'}</strong>, and I'm curious about{' '}
+              <strong className="text-toffee-deep">{formData.puppyInterest}</strong>.
             </p>
             {formData.message && (
-              <p className="mt-2 italic text-cocoa">"{formData.message}"</p>
+              <p className="mt-2 italic">"{formData.message}"</p>
             )}
-            <p className="mt-2 text-right text-xs font-sans text-cocoa-soft">— with love, a future puppy parent</p>
+            <p className="mt-2 text-right text-xs font-sans text-cocoa-soft">
+              — with love, a future puppy parent
+            </p>
           </div>
 
           <div className="flex flex-col sm:flex-row items-center justify-center gap-3">
@@ -157,15 +143,16 @@ export default function MadLibsForm() {
               href={generateWhatsAppUrl()}
               target="_blank"
               rel="noopener noreferrer"
-              className="btn btn-primary w-full sm:w-auto inline-flex items-center justify-center gap-2"
+              className="btn btn-primary w-full sm:w-auto inline-flex items-center justify-center gap-2 font-bold py-3.5 px-6 shadow-soft"
             >
               <MessageCircle size={18} />
               <span>Send via WhatsApp Now</span>
             </a>
 
             <button
+              type="button"
               onClick={handleReset}
-              className="btn btn-outline w-full sm:w-auto inline-flex items-center justify-center gap-2"
+              className="btn btn-outline w-full sm:w-auto inline-flex items-center justify-center gap-2 font-bold py-3.5 px-5"
             >
               <RotateCcw size={16} />
               <span>Write another note</span>
@@ -173,170 +160,128 @@ export default function MadLibsForm() {
           </div>
         </div>
       ) : (
-        /* The Mad-Libs Letter Form */
-        <form onSubmit={handleSubmit} noValidate>
-          <div className="flex items-center gap-2 mb-6">
-            <span className="font-scrawl text-xl sm:text-2xl text-toffee font-bold">
-              dear TeddyPups…
-            </span>
-            <Sparkles size={16} className="text-honey" />
+        <form onSubmit={handleSubmit} noValidate className="tp-letterform">
+          {/* Dashed Postage Stamp in Top-Right Corner */}
+          <div className="tp-letter__stamp">
+            <svg
+              viewBox="0 0 24 24"
+              fill="currentColor"
+              className="w-7 h-7 text-toffee-deep"
+              aria-hidden="true"
+            >
+              <circle cx="7" cy="8" r="2.3" />
+              <circle cx="17" cy="8" r="2.3" />
+              <circle cx="12" cy="5" r="2.3" />
+              <path d="M12 10.5c-3 0-5 2.2-5 4.5 0 2 1.8 3.5 5 3.5s5-1.5 5-3.5c0-2.3-2-4.5-5-4.5z" />
+            </svg>
           </div>
 
-          <div className="space-y-4 font-sans text-base sm:text-lg text-cocoa leading-relaxed">
-            {/* Sentence 1: Name and Phone */}
-            <div className="flex flex-wrap items-baseline gap-2">
-              <span>my name is</span>
-              <div className="inline-block relative">
-                <input
-                  type="text"
-                  name="name"
-                  value={formData.name}
-                  onChange={handleChange}
-                  placeholder="your name *"
-                  className={`bg-transparent border-b-2 px-2 py-0.5 font-scrawl text-cocoa placeholder:text-cocoa/40 focus:outline-none transition-colors w-40 sm:w-48 text-base sm:text-lg ${
-                    errors.name
-                      ? 'border-red-500 bg-red-50/50'
-                      : 'border-honey hover:border-toffee focus:border-toffee'
-                  }`}
-                  aria-required="true"
-                />
-                {errors.name && (
-                  <span className="block text-xs font-sans text-red-600 mt-0.5">
-                    {errors.name}
-                  </span>
-                )}
-              </div>
+          <span className="tp-letterform__greeting font-scrawl font-bold block mb-2">
+            dear TeddyPups,
+          </span>
 
-              <span>, and you can reach me on</span>
-              <div className="inline-block relative">
-                <input
-                  type="tel"
-                  name="phone"
-                  value={formData.phone}
-                  onChange={handleChange}
-                  placeholder="phone or WhatsApp *"
-                  className={`bg-transparent border-b-2 px-2 py-0.5 font-scrawl text-cocoa placeholder:text-cocoa/40 focus:outline-none transition-colors w-44 sm:w-56 text-base sm:text-lg ${
-                    errors.phone
-                      ? 'border-red-500 bg-red-50/50'
-                      : 'border-honey hover:border-toffee focus:border-toffee'
-                  }`}
-                  aria-required="true"
-                />
-                {errors.phone && (
-                  <span className="block text-xs font-sans text-red-600 mt-0.5">
-                    {errors.phone}
-                  </span>
-                )}
-              </div>
-            </div>
-
-            {/* Sentence 2: Email */}
-            <div className="flex flex-wrap items-baseline gap-2">
-              <span>or by email at</span>
-              <div className="inline-block relative">
-                <input
-                  type="email"
-                  name="email"
-                  value={formData.email}
-                  onChange={handleChange}
-                  placeholder="email (optional)"
-                  className={`bg-transparent border-b-2 px-2 py-0.5 font-scrawl text-cocoa placeholder:text-cocoa/40 focus:outline-none transition-colors w-52 sm:w-64 text-base sm:text-lg ${
-                    errors.email
-                      ? 'border-red-500 bg-red-50/50'
-                      : 'border-honey hover:border-toffee focus:border-toffee'
-                  }`}
-                />
-                {errors.email && (
-                  <span className="block text-xs font-sans text-red-600 mt-0.5">
-                    {errors.email}
-                  </span>
-                )}
-              </div>
-              <span>.</span>
-            </div>
-
-            {/* Sentence 3: City and Puppy Interest */}
-            <div className="flex flex-wrap items-baseline gap-2">
-              <span>I live in</span>
-              <div className="inline-block">
-                <input
-                  type="text"
-                  name="city"
-                  value={formData.city}
-                  onChange={handleChange}
-                  placeholder="e.g. Dubai Marina"
-                  className="bg-transparent border-b-2 border-honey hover:border-toffee focus:border-toffee px-2 py-0.5 font-scrawl text-cocoa placeholder:text-cocoa/40 focus:outline-none transition-colors w-40 sm:w-48 text-base sm:text-lg"
-                />
-              </div>
-
-              <span>, and I'm curious about</span>
-              <div className="inline-block relative">
-                <select
-                  name="puppyInterest"
-                  value={formData.puppyInterest}
-                  onChange={handleChange}
-                  className="bg-cream border border-honey/60 hover:border-toffee focus:border-toffee rounded-xl px-3 py-1 font-sans text-sm text-cocoa focus:outline-none transition-colors cursor-pointer shadow-sm max-w-xs"
-                >
-                  {puppyOptions.map((opt) => (
-                    <option key={opt} value={opt}>
-                      {opt}
-                    </option>
-                  ))}
-                </select>
-              </div>
-              <span>.</span>
-            </div>
-
-            {/* Additional Message / Special Wishes */}
-            <div className="pt-4">
-              <label
-                htmlFor="mad-libs-message"
-                className="block text-xs font-bold text-cocoa-soft uppercase tracking-wider mb-2 font-sans"
-              >
-                Notes or special wishes (optional):
-              </label>
-              <textarea
-                id="mad-libs-message"
-                name="message"
-                rows={3}
-                value={formData.message}
+          <div className="tp-letterform__line font-sans text-cocoa">
+            <span>my name is</span>{' '}
+            <span className="tp-blank" style={{ '--size': '18ch' }}>
+              <input
+                type="text"
+                name="name"
+                value={formData.name}
                 onChange={handleChange}
-                placeholder="Tell us about your home, timeline, or any questions you have for our team..."
-                className="w-full bg-white/70 border border-honey/40 focus:border-toffee rounded-2xl p-3.5 font-sans text-sm text-cocoa placeholder:text-cocoa/40 focus:outline-none focus:ring-1 focus:ring-toffee transition-all resize-none shadow-sm"
+                placeholder="your name *"
+                aria-label="Your name"
+                aria-invalid={!!errors.name}
+                required
               />
-            </div>
-
-            {/* Sign off */}
-            <div className="pt-4 text-right">
-              <p className="font-scrawl text-base sm:text-lg text-toffee font-medium">
-                with love, a future puppy parent
-              </p>
-            </div>
+            </span>
+            <span>, and you can reach me on</span>{' '}
+            <span className="tp-blank" style={{ '--size': '20ch' }}>
+              <input
+                type="tel"
+                name="phone"
+                value={formData.phone}
+                onChange={handleChange}
+                placeholder="phone or WhatsApp *"
+                aria-label="Phone or WhatsApp number"
+                aria-invalid={!!errors.phone}
+                required
+              />
+            </span>
+            <span>or by email at</span>{' '}
+            <span className="tp-blank" style={{ '--size': '22ch' }}>
+              <input
+                type="email"
+                name="email"
+                value={formData.email}
+                onChange={handleChange}
+                placeholder="email (optional)"
+                aria-label="Email address"
+                aria-invalid={!!errors.email}
+              />
+            </span>
+            <span>. I live in</span>{' '}
+            <span className="tp-blank" style={{ '--size': '18ch' }}>
+              <input
+                type="text"
+                name="city"
+                value={formData.city}
+                onChange={handleChange}
+                placeholder="your area (optional)"
+                aria-label="City or area"
+              />
+            </span>
+            <span>, and I'm curious about</span>{' '}
+            <span className="tp-blank tp-blank--select" style={{ '--size': '28ch' }}>
+              <select
+                name="puppyInterest"
+                value={formData.puppyInterest}
+                onChange={handleChange}
+                aria-label="Puppy interest"
+              >
+                {puppyOptions.map((opt) => (
+                  <option key={opt} value={opt}>
+                    {opt}
+                  </option>
+                ))}
+              </select>
+            </span>
+            <span>.</span>
           </div>
 
-          {/* Form Actions */}
-          <div className="mt-8 pt-6 border-t border-cocoa/10 flex flex-col sm:flex-row items-center justify-between gap-4">
-            <p className="text-xs text-cocoa-soft flex items-center gap-1.5">
-              <Sparkles size={14} className="text-honey" />
-              <span>We reply promptly via WhatsApp or phone.</span>
-            </p>
+          {/* Ruled Notebook Note Area */}
+          <textarea
+            className="tp-letterform__note font-scrawl"
+            rows={3}
+            name="message"
+            value={formData.message}
+            onChange={handleChange}
+            placeholder="anything else we should know?"
+            aria-label="Notes or message"
+          />
+
+          {/* Validation Errors Notice */}
+          {(errors.name || errors.phone || errors.email) && (
+            <div className="tp-letterform__alert mt-4 flex items-center gap-2 text-xs font-semibold text-[#8a1c14]">
+              <AlertCircle size={16} />
+              <span>
+                {errors.name || errors.phone || errors.email}
+              </span>
+            </div>
+          )}
+
+          {/* Signature and Submit Button */}
+          <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4 mt-8 pt-4 border-t border-cocoa/10">
+            <span className="tp-letterform__sign font-scrawl text-sm sm:text-base text-toffee-ink font-bold">
+              — with love, a future puppy parent
+            </span>
 
             <button
               type="submit"
               disabled={isSubmitting}
-              className="btn btn-primary w-full sm:w-auto inline-flex items-center justify-center gap-2 py-3 px-8 text-base"
+              className="btn btn-primary py-3.5 px-7 font-bold flex items-center gap-2 shadow-soft"
             >
-              {isSubmitting ? (
-                <>
-                  <div className="w-4 h-4 border-2 border-milk border-t-transparent rounded-full animate-spin" />
-                  <span>Drafting letter...</span>
-                </>
-              ) : (
-                <>
-                  <Send size={16} />
-                  <span>Post my letter 💌</span>
-                </>
-              )}
+              <span>{isSubmitting ? 'Sealing...' : 'Post my letter'}</span>
+              <Send size={16} />
             </button>
           </div>
         </form>

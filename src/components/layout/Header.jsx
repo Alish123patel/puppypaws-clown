@@ -1,17 +1,21 @@
 import React, { useState, useEffect } from 'react'
-import { Link, NavLink } from 'react-router-dom'
-import { MessageCircle, Menu } from 'lucide-react'
+import { Link, NavLink, useLocation } from 'react-router-dom'
 import { siteConfig } from '../../data/siteConfig.js'
 import MobileDrawer from './MobileDrawer.jsx'
+
+const PAW_PATH = "M32 30.5c-7.6 0-15.6 8.3-15.6 15.5 0 5.4 4.2 8.3 9.2 8.3 2.6 0 4.5-1.1 6.4-1.1s3.8 1.1 6.4 1.1c5 0 9.2-2.9 9.2-8.3 0-7.2-8-15.5-15.6-15.5zM19.28 26.71C21.07 30.08 20.42 33.92 17.84 35.29C15.25 36.67 11.71 35.05 9.92 31.69C8.13 28.32 8.78 24.48 11.36 23.11C13.95 21.73 17.49 23.35 19.28 26.71ZM29.62 15.64C30.32 19.62 28.46 23.26 25.47 23.79C22.48 24.32 19.48 21.53 18.78 17.56C18.08 13.58 19.94 9.94 22.93 9.41C25.92 8.88 28.92 11.67 29.62 15.64ZM45.22 17.56C44.52 21.53 41.52 24.32 38.53 23.79C35.54 23.26 33.68 19.62 34.38 15.64C35.08 11.67 38.08 8.88 41.07 9.41C44.06 9.94 45.92 13.58 45.22 17.56ZM54.08 31.69C52.29 35.05 48.75 36.67 46.16 35.29C43.58 33.92 42.93 30.08 44.72 26.71C46.51 23.35 50.05 21.73 52.64 23.11C55.22 24.48 55.87 28.32 54.08 31.69Z"
 
 export default function Header() {
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false)
   const [isScrolled, setIsScrolled] = useState(false)
+  const location = useLocation()
+  const isHome = location.pathname === '/'
 
   useEffect(() => {
     const handleScroll = () => {
-      setIsScrolled(window.scrollY > 20)
+      setIsScrolled(window.scrollY > 15)
     }
+    handleScroll()
     window.addEventListener('scroll', handleScroll, { passive: true })
     return () => window.removeEventListener('scroll', handleScroll)
   }, [])
@@ -19,98 +23,95 @@ export default function Header() {
   return (
     <>
       <header
-        className={`sticky top-0 z-40 transition-all duration-300 bg-milk/95 backdrop-blur-md ${
-          isScrolled ? 'shadow-sm' : ''
-        }`}
-        style={{ height: 'var(--header-h, 72px)' }}
+        id="site-header"
+        data-scrolled={isScrolled ? "true" : "false"}
+        data-hidden="false"
+        data-home={isHome ? "true" : "false"}
+        className="tp-header fixed inset-x-0 top-0 z-50"
       >
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 h-full flex items-center justify-between gap-4">
+        <div className="tp-header__bar gutter">
           {/* Brand Logo & Name */}
           <Link
             to="/"
-            className="group flex items-center gap-3 rounded-full focus:outline-none focus:ring-2 focus:ring-honey"
-            aria-label="TeddyPups U.A.E. — Home"
+            className="tp-header__brand"
+            aria-label="TeddyPups U.A.E. — home"
           >
             <img
               src="/brand/logo.png"
-              alt="TeddyPups Logo"
-              className="w-10 h-10 sm:w-11 sm:h-11 object-contain transition-transform duration-300 group-hover:-rotate-8"
+              alt=""
+              width="56"
+              height="56"
+              className="tp-header__logo"
             />
-            <span className="font-plush font-bold text-2xl sm:text-[1.65rem] text-cocoa tracking-tight">
+            <span className="font-plush tp-header__name">
               TeddyPups
             </span>
           </Link>
 
           {/* Desktop Navigation Links */}
-          <nav className="hidden lg:flex items-center gap-6 xl:gap-8" aria-label="Main Navigation">
-            {siteConfig.navigation.map((item) => (
-              <NavLink
-                key={item.path}
-                to={item.path}
-                className={({ isActive }) =>
-                  `relative py-2 text-sm xl:text-[0.95rem] font-semibold transition-colors duration-200 ${
-                    isActive
-                      ? 'text-toffee-deep font-bold'
-                      : 'text-cocoa hover:text-toffee'
-                  }`
-                }
-              >
-                {({ isActive }) => (
-                  <>
+          <nav className="tp-header__nav" aria-label="Main">
+            <ul>
+              {siteConfig.navigation.map((item) => (
+                <li key={item.path}>
+                  <NavLink
+                    to={item.path}
+                    end={item.path === '/'}
+                    className={({ isActive }) =>
+                      `tp-nav-link ${isActive ? 'active' : ''}`
+                    }
+                    data-active={location.pathname === item.path ? "true" : "false"}
+                  >
                     <span>{item.label}</span>
-                    {isActive && (
-                      <span
-                        className="absolute -bottom-1 left-1/2 -translate-x-1/2 w-1.5 h-1.5 rounded-full bg-toffee"
-                        aria-hidden="true"
-                      />
-                    )}
-                  </>
-                )}
-              </NavLink>
-            ))}
+                    <svg viewBox="0 0 64 64" className="tp-nav-link__paw" aria-hidden="true" fill="currentColor">
+                      <path d={PAW_PATH} />
+                    </svg>
+                  </NavLink>
+                </li>
+              ))}
+            </ul>
           </nav>
 
-          {/* Header End Actions (WhatsApp & Mobile Menu) */}
-          <div className="flex items-center gap-3">
+          {/* Header End Actions (WhatsApp & Mobile Menu Button) */}
+          <div className="tp-header__end">
             <a
               href={siteConfig.contact.whatsappUrl}
               target="_blank"
               rel="noopener noreferrer"
-              className="btn btn-whatsapp hidden sm:inline-flex items-center gap-2 text-sm shadow-sm"
-              aria-label="WhatsApp us"
+              className="btn btn-whatsapp tp-header__wa"
             >
-              <MessageCircle size={16} />
-              <span>WhatsApp us</span>
+              WhatsApp us
             </a>
 
             <button
               type="button"
               onClick={() => setIsMobileMenuOpen(true)}
-              className="lg:hidden inline-flex items-center gap-2 px-3.5 py-2 rounded-full border border-cocoa/20 bg-milk text-cocoa text-sm font-semibold hover:bg-honey/10 transition-colors focus:outline-none focus:ring-2 focus:ring-honey"
-              aria-label="Open mobile menu"
-              aria-expanded={isMobileMenuOpen}
+              className="inline-flex h-10 items-center gap-2 rounded-full border-2 border-cocoa bg-milk px-4 text-[0.95rem] font-semibold lg:hidden"
+              aria-haspopup="dialog"
+              aria-label="Open navigation menu"
             >
-              <Menu size={18} />
+              <svg viewBox="0 0 64 64" className="size-4" aria-hidden="true" fill="currentColor">
+                <path d={PAW_PATH} />
+              </svg>
               <span>Menu</span>
             </button>
           </div>
         </div>
 
-        {/* Decorative Scalloped Hem SVG attached to bottom edge */}
+        {/* Decorative Scalloped Hem SVG Pattern */}
         <svg
           aria-hidden="true"
-          className="tp-header__hem absolute top-[calc(100%-1px)] left-0 w-full h-[14px] pointer-events-none drop-shadow-[0_4px_4px_rgba(42,23,14,0.06)]"
+          className="tp-header__hem"
           width="100%"
           height="14"
           preserveAspectRatio="none"
         >
           <defs>
-            <pattern id="tp-hem-pattern" width="44" height="14" patternUnits="userSpaceOnUse">
-              <path d="M0 0H44V2A22 11 0 0 1 0 2Z" fill="var(--color-milk)"></path>
-              <path d="M0 2A22 11 0 0 0 44 2" fill="none" stroke="rgba(42, 23, 14, 0.12)" strokeWidth="1.5"></path>
+            <pattern id="tp-hem" width="44" height="14" patternUnits="userSpaceOnUse">
+              <path d="M0 0H44V2A22 11 0 0 1 0 2Z" className="tp-header__hem-fill" />
+              <path d="M0 2A22 11 0 0 0 44 2" className="tp-header__hem-line" />
             </pattern>
           </defs>
-          <rect width="100%" height="14" fill="url(#tp-hem-pattern)"></rect>
+          <rect width="100%" height="14" fill="url(#tp-hem)" />
         </svg>
       </header>
 

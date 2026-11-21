@@ -4,7 +4,6 @@ import {
   Clock,
   Navigation,
   Calendar,
-  MessageCircle,
   ShieldCheck,
   Sparkles
 } from 'lucide-react'
@@ -13,19 +12,19 @@ import { siteConfig } from '../../data/index.js'
 export default function ShowroomCard() {
   const showroomPhotos = [
     {
-      src: '/reference-assets/showroom/showroom_27b888_323008bb0f6a41d4bde2a0da7206cd98f003.jpg',
+      src: '/assets/showroom/showroom_27b888_323008bb0f6a41d4bde2a0da7206cd98f003.jpg',
       alt: 'TeddyPups Downtown Dubai showroom lounge'
     },
     {
-      src: '/reference-assets/showroom/showroom_27b888_323008bb0f6a41d4bde2a0da7206cd98f000.jpg',
+      src: '/assets/showroom/showroom_27b888_323008bb0f6a41d4bde2a0da7206cd98f000.jpg',
       alt: 'TeddyPups consultation room'
     },
     {
-      src: '/reference-assets/showroom/showroom_27b888_323008bb0f6a41d4bde2a0da7206cd98f001.jpg',
+      src: '/assets/showroom/showroom_27b888_323008bb0f6a41d4bde2a0da7206cd98f001.jpg',
       alt: 'TeddyPups private puppy interaction suite'
     },
     {
-      src: '/reference-assets/showroom/showroom_27b888_323008bb0f6a41d4bde2a0da7206cd98f002.jpg',
+      src: '/assets/showroom/showroom_27b888_323008bb0f6a41d4bde2a0da7206cd98f002.jpg',
       alt: 'TeddyPups showroom reception'
     }
   ]
@@ -33,9 +32,9 @@ export default function ShowroomCard() {
   const [activePhotoIndex, setActivePhotoIndex] = useState(0)
 
   return (
-    <div className="showroom-card bg-cream rounded-3xl border border-cocoa/10 shadow-card overflow-hidden">
-      {/* Photo Showcase */}
-      <div className="relative aspect-video sm:aspect-[16/10] bg-sand/30 overflow-hidden">
+    <div className="tp-shopfront shadow-[8px_10px_0_0_#2a170e29]">
+      {/* Photo Showcase with Arched Top */}
+      <div className="relative aspect-video sm:aspect-[16/10] bg-sand/30 overflow-hidden m-4 sm:m-6 rounded-2xl border-2 border-cocoa">
         <img
           src={showroomPhotos[activePhotoIndex].src}
           alt={showroomPhotos[activePhotoIndex].alt}
@@ -43,16 +42,17 @@ export default function ShowroomCard() {
         />
 
         {/* Badge */}
-        <div className="absolute top-4 left-4 bg-cocoa/80 backdrop-blur-md text-milk px-3.5 py-1.5 rounded-full text-xs font-semibold flex items-center gap-1.5">
-          <MapPin size={13} className="text-honey" />
-          <span>Downtown Dubai Showroom</span>
+        <div className="absolute top-3 left-3 bg-cocoa/85 backdrop-blur-md text-milk px-3 py-1 rounded-full text-xs font-semibold flex items-center gap-1.5 border border-white/20">
+          <MapPin size={12} className="text-honey" />
+          <span>Downtown Dubai Boutique</span>
         </div>
 
         {/* Thumbnail Selector Overlay */}
-        <div className="absolute bottom-3 right-3 flex items-center gap-1.5 p-1.5 rounded-2xl bg-cocoa/60 backdrop-blur-md">
+        <div className="absolute bottom-3 right-3 flex items-center gap-1.5 p-1.5 rounded-2xl bg-cocoa/75 backdrop-blur-md">
           {showroomPhotos.map((photo, idx) => (
             <button
               key={idx}
+              type="button"
               onClick={() => setActivePhotoIndex(idx)}
               className={`w-9 h-7 rounded-lg overflow-hidden border transition-all ${
                 activePhotoIndex === idx
@@ -72,8 +72,8 @@ export default function ShowroomCard() {
       </div>
 
       {/* Showroom Details */}
-      <div className="p-6 sm:p-8">
-        <div className="flex items-center gap-2 text-xs font-bold text-toffee uppercase tracking-wider mb-2">
+      <div className="px-5 pb-6 sm:px-8 sm:pb-8">
+        <div className="flex items-center gap-1.5 text-xs font-bold text-toffee uppercase tracking-wider mb-2">
           <Sparkles size={14} />
           <span>In-Person Consultations</span>
         </div>
@@ -91,7 +91,7 @@ export default function ShowroomCard() {
           <div className="flex items-start gap-3 text-sm text-cocoa">
             <MapPin size={18} className="text-toffee shrink-0 mt-0.5" />
             <div>
-              <span className="font-semibold block">{siteConfig.contact.address}</span>
+              <span className="font-bold block">{siteConfig.contact.address}</span>
               <span className="text-xs text-cocoa-soft">
                 Private valet parking &amp; boutique concierge reception
               </span>
@@ -101,7 +101,7 @@ export default function ShowroomCard() {
           <div className="flex items-start gap-3 text-sm text-cocoa">
             <Clock size={18} className="text-toffee shrink-0 mt-0.5" />
             <div>
-              <span className="font-semibold block">Opening Hours</span>
+              <span className="font-bold block">Opening Hours</span>
               <span className="text-xs text-cocoa-soft">
                 Monday – Sunday: 10:00 AM – 9:00 PM (Appointments &amp; Walk-ins welcome)
               </span>
@@ -111,7 +111,7 @@ export default function ShowroomCard() {
           <div className="flex items-start gap-3 text-sm text-cocoa">
             <ShieldCheck size={18} className="text-toffee shrink-0 mt-0.5" />
             <div>
-              <span className="font-semibold block">Veterinary Standards</span>
+              <span className="font-bold block">Veterinary Standards</span>
               <span className="text-xs text-cocoa-soft">
                 Full sanitization protocol between puppy interactions to protect infant health
               </span>
@@ -125,7 +125,7 @@ export default function ShowroomCard() {
             href={siteConfig.contact.googleMapsUrl}
             target="_blank"
             rel="noopener noreferrer"
-            className="btn btn-outline flex-1 inline-flex items-center justify-center gap-2 text-sm"
+            className="btn btn-outline flex-1 inline-flex items-center justify-center gap-2 text-sm py-3 font-bold"
           >
             <Navigation size={16} />
             <span>Open in Google Maps</span>
@@ -137,7 +137,7 @@ export default function ShowroomCard() {
             )}`}
             target="_blank"
             rel="noopener noreferrer"
-            className="btn btn-primary flex-1 inline-flex items-center justify-center gap-2 text-sm"
+            className="btn btn-primary flex-1 inline-flex items-center justify-center gap-2 text-sm py-3 font-bold shadow-soft"
           >
             <Calendar size={16} />
             <span>Book Private Visit</span>

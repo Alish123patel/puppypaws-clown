@@ -1,36 +1,21 @@
 import React, { useState, useMemo } from 'react'
-import { HelpCircle, MessageCircle, Phone, Search, X, Sparkles, ChevronDown, ChevronUp } from 'lucide-react'
+import { MessageCircle, X } from 'lucide-react'
 import { faqsData, siteConfig } from '../data/index.js'
-import Accordion from '../components/common/Accordion.jsx'
 
 export default function FaqPage() {
   const [openIds, setOpenIds] = useState(['faq-1'])
   const [searchQuery, setSearchQuery] = useState('')
-  const [selectedCategory, setSelectedCategory] = useState('All')
 
-  // Categories
-  const categories = useMemo(() => {
-    const cats = new Set(faqsData.map((f) => f.category))
-    return ['All', ...Array.from(cats)]
-  }, [])
-
-  // Filtered FAQs
+  // Filtered FAQs based on search
   const filteredFaqs = useMemo(() => {
-    return faqsData.filter((faq) => {
-      // Category filter
-      if (selectedCategory !== 'All' && faq.category !== selectedCategory) {
-        return false
-      }
-      // Search filter
-      if (searchQuery.trim()) {
-        const q = searchQuery.toLowerCase().trim()
-        const matchesQ = faq.question.toLowerCase().includes(q)
-        const matchesA = faq.answer.toLowerCase().includes(q)
-        return matchesQ || matchesA
-      }
-      return true
-    })
-  }, [selectedCategory, searchQuery])
+    if (!searchQuery.trim()) return faqsData
+    const q = searchQuery.toLowerCase().trim()
+    return faqsData.filter(
+      (faq) =>
+        faq.question.toLowerCase().includes(q) ||
+        faq.answer.toLowerCase().includes(q)
+    )
+  }, [searchQuery])
 
   const toggleAccordion = (id) => {
     setOpenIds((prev) =>
@@ -38,182 +23,154 @@ export default function FaqPage() {
     )
   }
 
-  const handleExpandAll = () => {
-    setOpenIds(filteredFaqs.map((f) => f.id))
-  }
-
-  const handleCollapseAll = () => {
-    setOpenIds([])
-  }
+  // Pre-calculated organic tilts and pushpin colors for corkboard feel
+  const tilts = [-0.9, 0.8, -0.6, 1.1, -1.2, 0.7, -0.8, 1.0, -0.5]
+  const pinColors = ['#c2622b', '#2f6e9e', '#f2be6b', '#a24a1a', '#5a3a28']
 
   return (
-    <div className="faq-page py-12 sm:py-16 bg-milk min-h-screen">
-      <div className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8">
-        {/* Page Hero Header */}
-        <div className="text-center max-w-2xl mx-auto mb-10">
-          <div className="inline-flex items-center gap-1.5 px-3.5 py-1.5 rounded-full bg-honey/30 text-toffee text-xs sm:text-sm font-semibold mb-4">
-            <HelpCircle size={14} className="text-toffee" />
-            <span>Adoption Guidance</span>
+    <div data-page="faq" className="tp-page min-h-screen">
+      <section className="tp-scene relative pt-12 pb-20 sm:pb-28">
+        <div className="max-w-6xl mx-auto px-4 sm:px-6">
+          {/* Header */}
+          <div className="text-center max-w-3xl mx-auto mb-12 sm:mb-16">
+            <span className="font-scrawl text-base sm:text-lg text-toffee font-bold block mb-1">
+              questions &amp; answers
+            </span>
+            <h1 className="font-plush font-bold text-4xl sm:text-6xl text-cocoa tracking-tight mb-4">
+              Questions &amp; answers
+            </h1>
+            <p className="font-sans text-cocoa-soft text-base sm:text-lg leading-relaxed max-w-2xl mx-auto">
+              Can't find what you're looking for? Message us on WhatsApp — our team is available 24/7.
+            </p>
           </div>
-          <h1 className="font-plush font-bold text-4xl sm:text-5xl lg:text-6xl text-cocoa tracking-tight mb-4">
-            Questions & answers
-          </h1>
-          <p className="font-sans text-cocoa-soft text-base sm:text-lg leading-relaxed">
-            Can't find what you're looking for? Message us on WhatsApp — our team is available 24/7.
-          </p>
-        </div>
 
-        {/* Whimsical "sniff out a question" Note Card */}
-        <div className="bg-cream rounded-4xl p-6 sm:p-8 border border-cocoa/10 shadow-soft mb-10 flex flex-col sm:flex-row items-center justify-between gap-6">
-          <div className="flex items-center gap-4 text-center sm:text-left">
-            <div className="w-14 h-14 rounded-3xl bg-honey/40 text-toffee-ink font-scrawl text-2xl font-bold flex items-center justify-center flex-shrink-0 shadow-xs">
-              ? !
-            </div>
-            <div>
-              <span className="font-scrawl text-base text-toffee font-bold block">
+          {/* Notes Board Layout */}
+          <div className="tp-notes">
+            {/* Sidebar Controls (Search, Count, WhatsApp prompt) */}
+            <div className="tp-notes__side">
+              <span className="tp-notes__label font-scrawl font-bold">
                 sniff out a question
               </span>
-              <span className="font-plush font-bold text-lg sm:text-xl text-cocoa block">
-                {faqsData.length} notes on the board
-              </span>
-              <span className="text-xs text-cocoa-soft">
-                Verified veterinary, travel, and adoption answers
-              </span>
+
+              {/* Search input with custom lens */}
+              <div className="tp-notes__search">
+                <input
+                  type="text"
+                  value={searchQuery}
+                  onChange={(e) => setSearchQuery(e.target.value)}
+                  placeholder="Type to filter notes…"
+                  aria-label="Filter questions"
+                />
+                <svg
+                  className="tp-notes__lens"
+                  viewBox="0 0 24 24"
+                  aria-hidden="true"
+                >
+                  <circle cx="11" cy="11" r="7" />
+                  <path d="M16.5 16.5L21 21" />
+                </svg>
+                {searchQuery && (
+                  <button
+                    type="button"
+                    onClick={() => setSearchQuery('')}
+                    className="absolute right-4 top-1/2 -translate-y-1/2 text-cocoa/50 hover:text-cocoa"
+                    aria-label="Clear search"
+                  >
+                    <X size={18} />
+                  </button>
+                )}
+              </div>
+
+              <div className="tp-notes__count font-sans text-sm">
+                Showing {filteredFaqs.length} of {faqsData.length} notes on the board
+              </div>
+
+              {/* Ask WhatsApp Button */}
+              <div className="tp-notes__ask mt-3">
+                <a
+                  href={siteConfig.contact.whatsappUrl}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="btn btn-whatsapp inline-flex items-center gap-2 py-3 px-5 text-sm font-bold shadow-soft"
+                >
+                  <MessageCircle size={18} />
+                  <span>Ask us on WhatsApp</span>
+                </a>
+              </div>
+            </div>
+
+            {/* Corkboard with Pinned Note Cards */}
+            <div className="tp-notes__board">
+              <div className="tp-notes__list">
+                {filteredFaqs.length > 0 ? (
+                  filteredFaqs.map((faq, index) => {
+                    const isOpen = openIds.includes(faq.id)
+                    const tilt = tilts[index % tilts.length]
+                    const pinColor = pinColors[index % pinColors.length]
+
+                    return (
+                      <article
+                        key={faq.id}
+                        className="tp-note"
+                        data-unfolded={isOpen ? true : undefined}
+                        style={{
+                          '--tilt': `${tilt}deg`,
+                          '--pin': pinColor
+                        }}
+                      >
+                        {/* Colored Push Pin */}
+                        <span className="tp-note__pin"></span>
+
+                        {/* Question Title Bar */}
+                        <h3 className="tp-note__q">
+                          <button
+                            type="button"
+                            onClick={() => toggleAccordion(faq.id)}
+                            aria-expanded={isOpen}
+                          >
+                            <span className="font-plush font-bold text-cocoa">
+                              {faq.question}
+                            </span>
+                            <span
+                              className="tp-note__chevron"
+                              aria-hidden="true"
+                            ></span>
+                          </button>
+                        </h3>
+
+                        {/* Answer 3D Flap */}
+                        <div className="tp-note__answer">
+                          <div className="tp-note__flap">
+                            <p className="font-sans leading-relaxed text-sm sm:text-base">
+                              {faq.answer}
+                            </p>
+                          </div>
+                        </div>
+                      </article>
+                    )
+                  })
+                ) : (
+                  <div className="tp-note tp-note--empty text-center py-10">
+                    <p className="font-plush font-bold text-lg text-cocoa mb-2">
+                      No matching questions found
+                    </p>
+                    <p className="font-sans text-sm text-cocoa-soft mb-4">
+                      Try searching with different terms or ask us directly on WhatsApp.
+                    </p>
+                    <button
+                      type="button"
+                      onClick={() => setSearchQuery('')}
+                      className="btn btn-outline text-xs py-2 px-4"
+                    >
+                      Reset search
+                    </button>
+                  </div>
+                )}
+              </div>
             </div>
           </div>
-
-          <a
-            href={siteConfig.contact.whatsappUrl}
-            target="_blank"
-            rel="noopener noreferrer"
-            className="btn btn-whatsapp text-xs sm:text-sm py-3 px-5 flex items-center gap-2 whitespace-nowrap shadow-xs font-bold"
-          >
-            <MessageCircle size={16} />
-            <span>Ask your own question</span>
-          </a>
         </div>
-
-        {/* Search & Category Filter Controls */}
-        <div className="mb-8 space-y-4">
-          {/* Search Input */}
-          <div className="relative">
-            <input
-              type="text"
-              value={searchQuery}
-              onChange={(e) => setSearchQuery(e.target.value)}
-              placeholder="Search questions or keywords (e.g. vaccinated, import, showroom)..."
-              className="w-full py-3 px-5 pr-10 rounded-2xl border border-cocoa/15 bg-white text-sm text-cocoa placeholder:text-cocoa/40 focus:outline-none focus:ring-2 focus:ring-honey shadow-xs"
-            />
-            {searchQuery ? (
-              <button
-                type="button"
-                onClick={() => setSearchQuery('')}
-                className="absolute right-3.5 top-1/2 -translate-y-1/2 text-cocoa/40 hover:text-cocoa"
-                aria-label="Clear search"
-              >
-                <X size={16} />
-              </button>
-            ) : (
-              <Search
-                size={18}
-                className="absolute right-3.5 top-1/2 -translate-y-1/2 text-cocoa/40 pointer-events-none"
-              />
-            )}
-          </div>
-
-          {/* Expand/Collapse All Actions */}
-          <div className="flex items-center justify-between text-xs font-semibold text-cocoa-soft px-1">
-            <span>Showing {filteredFaqs.length} of {faqsData.length} questions</span>
-            <div className="flex items-center gap-3">
-              <button
-                type="button"
-                onClick={handleExpandAll}
-                className="hover:text-toffee flex items-center gap-1 transition-colors"
-              >
-                <ChevronDown size={14} />
-                <span>Expand all</span>
-              </button>
-              <span>·</span>
-              <button
-                type="button"
-                onClick={handleCollapseAll}
-                className="hover:text-toffee flex items-center gap-1 transition-colors"
-              >
-                <ChevronUp size={14} />
-                <span>Collapse all</span>
-              </button>
-            </div>
-          </div>
-        </div>
-
-        {/* 9 Authentic FAQs Accordion List */}
-        {filteredFaqs.length > 0 ? (
-          <div className="space-y-4 mb-16">
-            {filteredFaqs.map((faq) => (
-              <Accordion
-                key={faq.id}
-                id={faq.id}
-                question={faq.question}
-                answer={faq.answer}
-                isOpen={openIds.includes(faq.id)}
-                onToggle={() => toggleAccordion(faq.id)}
-              />
-            ))}
-          </div>
-        ) : (
-          <div className="text-center py-12 px-4 bg-cream/60 rounded-3xl border border-cocoa/10 my-8">
-            <HelpCircle size={36} className="mx-auto text-toffee/40 mb-3" />
-            <h3 className="font-plush font-bold text-xl text-cocoa mb-1">
-              No matching questions found
-            </h3>
-            <p className="font-sans text-cocoa-soft text-sm mb-4">
-              Try searching with different terms or ask us directly on WhatsApp.
-            </p>
-            <button
-              type="button"
-              onClick={() => {
-                setSearchQuery('')
-                setSelectedCategory('All')
-              }}
-              className="btn btn-outline text-xs py-2 px-4"
-            >
-              Reset search
-            </button>
-          </div>
-        )}
-
-        {/* Unanswered Questions Support Card */}
-        <div className="bg-gradient-to-r from-honey/20 via-cream to-blush/20 rounded-4xl p-8 sm:p-10 border border-cocoa/10 shadow-soft text-center">
-          <span className="font-scrawl text-sm text-toffee font-bold block mb-1">
-            we are here 24/7
-          </span>
-          <h2 className="font-plush font-bold text-2xl sm:text-3xl text-cocoa mb-3">
-            Still have questions?
-          </h2>
-          <p className="font-sans text-cocoa-soft text-sm sm:text-base max-w-lg mx-auto mb-6 leading-relaxed">
-            From nutrition and training to overseas travel logistics, our experienced adoption team is ready to assist you.
-          </p>
-          <div className="flex flex-col sm:flex-row items-center justify-center gap-3">
-            <a
-              href={siteConfig.contact.whatsappUrl}
-              target="_blank"
-              rel="noopener noreferrer"
-              className="btn btn-whatsapp text-sm py-3.5 px-6 w-full sm:w-auto flex items-center justify-center gap-2 font-bold shadow-soft"
-            >
-              <MessageCircle size={17} />
-              <span>Message us on WhatsApp</span>
-            </a>
-
-            <a
-              href={`tel:${siteConfig.contact.phoneDisplay.replace(/\s+/g, '')}`}
-              className="btn btn-outline text-sm py-3.5 px-6 w-full sm:w-auto bg-white flex items-center justify-center gap-2 font-bold shadow-soft"
-            >
-              <Phone size={16} />
-              <span>Call {siteConfig.contact.phoneDisplay}</span>
-            </a>
-          </div>
-        </div>
-      </div>
+      </section>
     </div>
   )
 }

@@ -1,6 +1,5 @@
 import React from 'react'
 import { Routes, Route } from 'react-router-dom'
-import AnnouncementBar from './components/layout/AnnouncementBar.jsx'
 import Header from './components/layout/Header.jsx'
 import Footer from './components/layout/Footer.jsx'
 import MobileActionPill from './components/layout/MobileActionPill.jsx'
@@ -20,33 +19,20 @@ export default function App() {
     <div className="min-h-screen flex flex-col bg-milk text-cocoa selection:bg-honey selection:text-cocoa">
       <ScrollToTop />
 
-      {/* Global Announcement Bar */}
-      <AnnouncementBar />
-
-      {/* Sticky Navigation Header with Scalloped Hem */}
+      {/* Sticky/Fixed Navigation Header with Scalloped Hem */}
       <Header />
 
       {/* Main Content Area */}
-      <main className="flex-1">
+      <main id="main" tabIndex={-1} className="flex-1 relative pt-[var(--header-h)] outline-none">
         <Routes>
-          {/* Milestone 4: Complete Homepage */}
           <Route path="/" element={<HomePage />} />
-
-          {/* Milestone 5: Puppies Catalog & Gone Home Archive */}
           <Route path="/puppies" element={<PuppiesPage />} />
           <Route path="/gone-home" element={<GoneHomePage />} />
-
-          {/* Milestone 6: Dynamic Puppy Detail Page */}
           <Route path="/puppies/:slug" element={<PuppyDetailPage />} />
-
-          {/* Milestone 7: How It Works & FAQ Pages */}
           <Route path="/how-it-works" element={<HowItWorksPage />} />
           <Route path="/faq" element={<FaqPage />} />
-
-          {/* Milestone 8: Happy Families & Contact Pages */}
           <Route path="/happy-families" element={<HappyFamiliesPage />} />
           <Route path="/contact" element={<ContactPage />} />
-          {/* 404 Catch-All Page */}
           <Route path="*" element={<NotFoundPage />} />
         </Routes>
       </main>
@@ -54,7 +40,7 @@ export default function App() {
       {/* Global Footer */}
       <Footer />
 
-      {/* Mobile Floating Action Pill */}
+      {/* Mobile Floating Action Pill / WhatsApp Bar */}
       <MobileActionPill />
     </div>
   )

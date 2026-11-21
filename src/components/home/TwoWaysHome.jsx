@@ -1,117 +1,123 @@
 import React from 'react'
 import { Link } from 'react-router-dom'
-import { MapPin, Plane, CheckCircle2, ArrowRight } from 'lucide-react'
+import { siteConfig } from '../../data/siteConfig.js'
 
 export default function TwoWaysHome() {
   return (
-    <section className="py-16 sm:py-24 bg-cream/60 border-y border-cocoa/5">
-      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-        {/* Section Heading */}
-        <div className="text-center max-w-2xl mx-auto mb-14">
-          <span className="font-scrawl text-sm sm:text-base text-toffee block mb-2">
-            choose your way home
-          </span>
-          <h2 className="font-plush font-bold text-3xl sm:text-4xl lg:text-5xl text-cocoa tracking-tight">
-            Two ways to meet your puppy
-          </h2>
-          <p className="font-sans text-cocoa-soft text-base sm:text-lg mt-3">
-            Whether visiting our Downtown Dubai showroom or importing a rare teacup breed, we handle every detail with love.
-          </p>
-        </div>
+    <section
+      className="tp-scene tp-paths"
+      style={{
+        '--sky-top': '#fbe3b4',
+        '--sky-bottom': '#f7d18d'
+      }}
+      aria-labelledby="paths-title"
+    >
+      <div className="gutter mx-auto max-w-[110rem]">
+        <h2 id="paths-title" className="tp-paths__title font-plush text-huge">
+          Two ways to meet your puppy
+        </h2>
 
-        {/* 2 Comparison Cards */}
-        <div className="grid grid-cols-1 md:grid-cols-2 gap-8 lg:gap-10">
-          {/* Pathway 1: In Dubai */}
-          <div className="bg-white rounded-4xl p-8 sm:p-10 border border-cocoa/10 shadow-soft flex flex-col justify-between hover:shadow-elevated transition-shadow duration-300">
-            <div>
-              <div className="flex items-center justify-between mb-6">
-                <span className="inline-flex items-center gap-1.5 px-3.5 py-1.5 rounded-full text-xs font-semibold bg-honey/30 text-toffee">
-                  <MapPin size={13} />
-                  <span>In our showroom</span>
+        <div className="tp-fork">
+          <div aria-hidden="true" className="tp-fork__post" />
+
+          {/* Left Pathway: Puppies in Dubai */}
+          <article className="tp-way tp-way--left" aria-labelledby="way-local">
+            <h3 id="way-local" className="tp-sign tp-sign--left font-plush">
+              Puppies in Dubai
+            </h3>
+
+            <div className="tp-way__scene">
+              <svg viewBox="0 0 300 120" className="tp-way__skyline" aria-hidden="true">
+                <path
+                  d="M4 116h292M20 116V78h16v38M44 116V60h18v56M70 116V84h12v32M150 116V36l4-6v-14l3-4 3 4v14l4 6v80M118 116V70l12-8v54M174 116V64l14 8v44M200 116V82h18v34M226 116V56h14v60M248 116V88h22v28"
+                  fill="none"
+                  stroke="currentColor"
+                  strokeWidth="2.6"
+                  strokeLinecap="round"
+                  strokeLinejoin="round"
+                />
+              </svg>
+
+              <figure className="tp-window">
+                <span className="tp-window__glass">
+                  <img
+                    alt="A tiny apricot puppy held up in our Dubai showroom"
+                    src="/assets/puppies/max_b942a5_a1fa75c7bf2f4d688ec0ce0344baef67f000.jpg"
+                    loading="lazy"
+                    decoding="async"
+                    style={{
+                      position: 'absolute',
+                      height: '100%',
+                      width: '100%',
+                      left: 0,
+                      top: 0,
+                      right: 0,
+                      bottom: 0,
+                      objectFit: 'cover'
+                    }}
+                  />
                 </span>
-                <span className="font-scrawl text-xs text-cocoa-soft">
-                  Same-day availability
-                </span>
-              </div>
-
-              <h3 className="font-plush font-bold text-2xl sm:text-3xl text-cocoa mb-3">
-                Puppies in Dubai
-              </h3>
-
-              <p className="font-sans text-cocoa-soft text-base leading-relaxed mb-6">
-                See them, love them, take them home. Come meet our locally available puppies before you decide.
-              </p>
-
-              <ul className="space-y-3 mb-8 text-sm font-semibold text-cocoa/80">
-                <li className="flex items-center gap-2.5">
-                  <CheckCircle2 size={16} className="text-toffee flex-shrink-0" />
-                  <span>Face-to-face bonding in Downtown Dubai</span>
-                </li>
-                <li className="flex items-center gap-2.5">
-                  <CheckCircle2 size={16} className="text-toffee flex-shrink-0" />
-                  <span>Immediate adoption & same-day pickup</span>
-                </li>
-                <li className="flex items-center gap-2.5">
-                  <CheckCircle2 size={16} className="text-toffee flex-shrink-0" />
-                  <span>Safe doorstep delivery anywhere in Dubai</span>
-                </li>
-              </ul>
+                <figcaption className="font-scrawl">In our showroom</figcaption>
+              </figure>
             </div>
 
-            <Link
-              to="/puppies"
-              className="btn btn-honey w-full sm:w-auto py-3.5 px-6 self-start flex items-center justify-center gap-2 group text-sm font-bold"
-            >
-              <span>Meet local puppies</span>
-              <ArrowRight size={16} className="transition-transform group-hover:translate-x-1" />
+            <p className="tp-way__text">
+              See them, love them, take them home. Come meet our locally available puppies before you decide.
+            </p>
+
+            <Link className="btn btn-outline" to="/puppies">
+              Meet puppies in Dubai
             </Link>
-          </div>
+          </article>
 
-          {/* Pathway 2: Imported */}
-          <div className="bg-white rounded-4xl p-8 sm:p-10 border border-cocoa/10 shadow-soft flex flex-col justify-between hover:shadow-elevated transition-shadow duration-300">
-            <div>
-              <div className="flex items-center justify-between mb-6">
-                <span className="inline-flex items-center gap-1.5 px-3.5 py-1.5 rounded-full text-xs font-semibold bg-sky text-sky-deep">
-                  <Plane size={13} />
-                  <span>Korea → Dubai</span>
+          {/* Right Pathway: Special Import */}
+          <article className="tp-way tp-way--right" aria-labelledby="way-import">
+            <h3 id="way-import" className="tp-sign tp-sign--right font-plush">
+              Special import
+            </h3>
+
+            <div className="tp-way__scene">
+              <svg viewBox="0 0 300 120" className="tp-way__globe" aria-hidden="true">
+                <circle cx="150" cy="60" r="45" fill="none" stroke="currentColor" strokeWidth="2.6" strokeDasharray="4 4" />
+                <path d="M105 60h90M150 15a45 45 0 0 1 0 90M150 15a45 45 0 0 0 0 90" fill="none" stroke="currentColor" strokeWidth="2" />
+              </svg>
+
+              <figure className="tp-window">
+                <span className="tp-window__glass">
+                  <img
+                    alt="Special import Korean teacup puppy"
+                    src="/assets/puppies/korean_teacup_maltipoo_puppy__girl__b942a5_50f0ae67c9ff437d911597d52a9e63b3-mv2.jpg"
+                    loading="lazy"
+                    decoding="async"
+                    style={{
+                      position: 'absolute',
+                      height: '100%',
+                      width: '100%',
+                      left: 0,
+                      top: 0,
+                      right: 0,
+                      bottom: 0,
+                      objectFit: 'cover'
+                    }}
+                  />
                 </span>
-                <span className="font-scrawl text-xs text-cocoa-soft">
-                  Rare teacup lines
-                </span>
-              </div>
-
-              <h3 className="font-plush font-bold text-2xl sm:text-3xl text-cocoa mb-3">
-                Imported for you
-              </h3>
-
-              <p className="font-sans text-cocoa-soft text-base leading-relaxed mb-6">
-                Exclusive Korean teacup puppies, delivered. Order from the world's most reputable breeders and let us handle the import.
-              </p>
-
-              <ul className="space-y-3 mb-8 text-sm font-semibold text-cocoa/80">
-                <li className="flex items-center gap-2.5">
-                  <CheckCircle2 size={16} className="text-sky-deep flex-shrink-0" />
-                  <span>Hand-selected from Korea & Europe certified breeders</span>
-                </li>
-                <li className="flex items-center gap-2.5">
-                  <CheckCircle2 size={16} className="text-sky-deep flex-shrink-0" />
-                  <span>Safe climate-controlled international cargo</span>
-                </li>
-                <li className="flex items-center gap-2.5">
-                  <CheckCircle2 size={16} className="text-sky-deep flex-shrink-0" />
-                  <span>Real photos, videos & health records on WhatsApp</span>
-                </li>
-              </ul>
+                <figcaption className="font-scrawl">Worldwide breeders</figcaption>
+              </figure>
             </div>
 
-            <Link
-              to="/how-it-works"
-              className="btn btn-primary w-full sm:w-auto py-3.5 px-6 self-start flex items-center justify-center gap-2 group text-sm font-bold"
+            <p className="tp-way__text">
+              Looking for a rare breed or specific lineage? We work with trusted ethical breeders across Europe and Korea.
+            </p>
+
+            <a
+              href={siteConfig.contact.whatsappUrl}
+              target="_blank"
+              rel="noopener noreferrer"
+              className="btn btn-outline"
             >
-              <span>See imported puppies</span>
-              <ArrowRight size={16} className="transition-transform group-hover:translate-x-1" />
-            </Link>
-          </div>
+              Order a rare breed
+            </a>
+          </article>
         </div>
       </div>
     </section>
